@@ -1,6 +1,6 @@
 {
   "name": "headlight",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Start, Stop, & Status For NodeJS Apps",
   "main": "index.js",
   "bin": {

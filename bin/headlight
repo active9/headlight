@@ -2,29 +2,43 @@
 
 var script = "";
 var headlight = require('../index.js');
+var path = require('path');
 
 if (process.argv[0]=="node" | process.argv[0]=="nodejs") {
 	script = process.argv.slice(2,process.argv.length);
 } else {
 	script = process.argv.slice(1,process.argv.length);
 }
+
+if (!script[1] & !script[2]) {
+	script[1] = path.resolve(process.cwd());
+	script[2] = path.resolve(script[1] +"/"+ require(path.resolve(script[1] +'/package.json')).main);
+} else if (!script[2]) {
+	script[2] = path.resolve(script[1] +"/"+ require(path.resolve(script[1] +'/package.json')).main);
+}
+script[1] = path.resolve(script[1]);
+script[2] = path.resolve(script[1], script[2]);
+
+
+console.log("SCRIPT:", script);
+
 if (script != "") {
 	if (script[0]=="start") {
 		if (typeof script[1] !=="undefined" & typeof script[2] !=="undefined") {
-			headlight.start(script[1],script[2]);
+			headlight.start(path.resolve(script[1]),path.resolve(script[2]));
 			setTimeout(function() {process.exit(1)},5000);
 		} else {
 			console.log("Invalid Usage: Try headlight start appdirectory app.js")
 		}
 	} else if (script[0]=="stop") {
 		if (typeof script[1] !=="undefined") {
-			headlight.stop(script[1]);
+			headlight.stop(path.resolve(script[1]));
 		} else {
 			console.log("Invalid Usage: Try headlight stop appdirectory")
 		}
 	} else if (script[0]=="status") {
 		if (typeof script[1] !=="undefined") {
-			var status = headlight.status(script[1]);
+			var status = headlight.status(path.resolve(script[1]));
 			if (status) {
 				console.log("Status",status); 
 			} else {
